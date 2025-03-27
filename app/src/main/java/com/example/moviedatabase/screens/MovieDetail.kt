@@ -49,7 +49,8 @@ fun MovieDetailScreen(
     duration: String,
     rating: String,
     goBack: () -> Unit,
-    addToList: () -> Unit
+    addToList: () -> Unit,
+    synopsis: String
 ){
     Scaffold (
         topBar = { DetailTopBar(
@@ -71,6 +72,7 @@ fun MovieDetailScreen(
             releaseDate = releaseDate,
             duration = duration,
             rating = rating,
+            synopsis = synopsis
         )
     }
 }
@@ -110,6 +112,7 @@ fun MovieDetailContent(
     releaseDate: String,
     duration: String,
     rating: String,
+    synopsis: String
 ){
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -118,7 +121,7 @@ fun MovieDetailContent(
             model = backgroundUrl,
             contentDescription = "Background Image",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize()
         )
 
 
@@ -129,9 +132,9 @@ fun MovieDetailContent(
 
         )
         LazyColumn(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 32.dp),
+                .padding(horizontal = 16.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
@@ -184,8 +187,7 @@ fun MovieDetailContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "'Avengers Assemble' ('The Avengers') is a truly enjoyable superhero film that lives up to its hype and creates a story that allows for four of the greatest superheroes to connect in this mega-blockbuster extravaganza. Joss Whedon has created one of the most action-packed Marvel films to have graced the screen, full of humour, thrills and a great cast of characters, all of which impel this visual effects-driven spectacle. Whilst I had the great opportunity to watch this epic in the cinema in 3D, the film is equally as stunning on an average television set, with the final battle between the Avengers and Loki's army being one of the most spectacular scenes in a superhero movie. An impressive and remarkable fantastical superhero flick from Whedon." +
-                            "'Avengers Assemble' ('The Avengers') is a truly enjoyable superhero film that lives up to its hype and creates a story that allows for four of the greatest superheroes to connect in this mega-blockbuster extravaganza. Joss Whedon has created one of the most action-packed Marvel films to have graced the screen, full of humour, thrills and a great cast of characters, all of which impel this visual effects-driven spectacle. Whilst I had the great opportunity to watch this epic in the cinema in 3D, the film is equally as stunning on an average television set, with the final battle between the Avengers and Loki's army being one of the most spectacular scenes in a superhero movie. An impressive and remarkable fantastical superhero flick from Whedon.",
+                    text = synopsis,
                     fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify
@@ -202,7 +204,7 @@ fun DetailTopBar(goBack: () -> Unit,
 ){
     TopAppBar(
         title = {
-            Text(text = "Go back")
+            Text(text = "Movie details")
 
         },
         navigationIcon = {
@@ -221,7 +223,7 @@ fun DetailTopBar(goBack: () -> Unit,
             ) {
                 Icon(
                     Icons.Outlined.Add,
-                    contentDescription = "Save to list",
+                    contentDescription = "Add to list",
                 )
             }
         }
@@ -265,7 +267,9 @@ fun PreviewMovieDetailScreen() {
         duration = "128 min",
         rating = "8/10",
         goBack = {},
-        addToList = {}
+        addToList = {},
+        synopsis = "'Avengers Assemble' ('The Avengers') is a truly enjoyable superhero film that lives up to its hype and creates a story that allows for four of the greatest superheroes to connect in this mega-blockbuster extravaganza. Joss Whedon has created one of the most action-packed Marvel films to have graced the screen, full of humour, thrills and a great cast of characters, all of which impel this visual effects-driven spectacle. Whilst I had the great opportunity to watch this epic in the cinema in 3D, the film is equally as stunning on an average television set, with the final battle between the Avengers and Loki's army being one of the most spectacular scenes in a superhero movie. An impressive and remarkable fantastical superhero flick from Whedon." +
+                "'Avengers Assemble' ('The Avengers') is a truly enjoyable superhero film that lives up to its hype and creates a story that allows for four of the greatest superheroes to connect in this mega-blockbuster extravaganza. Joss Whedon has created one of the most action-packed Marvel films to have graced the screen, full of humour, thrills and a great cast of characters, all of which impel this visual effects-driven spectacle. Whilst I had the great opportunity to watch this epic in the cinema in 3D, the film is equally as stunning on an average television set, with the final battle between the Avengers and Loki's army being one of the most spectacular scenes in a superhero movie. An impressive and remarkable fantastical superhero flick from Whedon."
         )
 }
 

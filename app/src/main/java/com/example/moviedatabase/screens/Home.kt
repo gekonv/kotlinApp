@@ -20,19 +20,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.moviedatabase.BottomNavigation
 import com.example.moviedatabase.Movie
-import com.example.moviedatabase.bottomNavItem
 import com.example.moviedatabase.movies
+import com.example.moviedatabase.navigation.BottomNavigation
+import com.example.moviedatabase.navigation.bottomNavItem
 
 @Composable
 fun HomeScreen(bottomNavItems: List<bottomNavItem>,
-               selectedItemIndex: Int){
+               currentDestination: String?){
     Scaffold (
         topBar = {  },
         bottomBar = { BottomNavigation(
             navigationItems = bottomNavItems,
-            selectedItemIndex = selectedItemIndex
+            currentRoute = currentDestination
         ) },
         modifier = Modifier.fillMaxSize(),
     ){ innerPadding ->

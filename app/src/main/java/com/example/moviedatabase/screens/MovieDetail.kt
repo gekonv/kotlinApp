@@ -32,15 +32,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.moviedatabase.BottomNavigation
 import com.example.moviedatabase.R
-import com.example.moviedatabase.bottomNavItem
+import com.example.moviedatabase.navigation.BottomNavigation
+import com.example.moviedatabase.navigation.Routes
+import com.example.moviedatabase.navigation.bottomNavItem
 
 @Composable
 fun MovieDetailScreen(
     bottomNavItems: List<bottomNavItem>,
-    selectedItemIndex: Int,
+    currentDestination: String?,
     backgroundUrl: String,
     posterUrl: String,
     title: String,
@@ -59,7 +62,7 @@ fun MovieDetailScreen(
         ) },
         bottomBar = { BottomNavigation(
             navigationItems = bottomNavItems,
-            selectedItemIndex = selectedItemIndex
+            currentRoute = currentDestination
         ) },
         modifier = Modifier.fillMaxSize(),
     ){ innerPadding ->
@@ -236,6 +239,7 @@ fun DetailTopBar(goBack: () -> Unit,
 fun PreviewMovieDetailScreen() {
     val sampleBottomNavItems = listOf(
         bottomNavItem(
+            route = Routes.Search::class.qualifiedName.toString(),
             icon = R.drawable.search,
             label = "Search",
             onClick = {
@@ -243,6 +247,7 @@ fun PreviewMovieDetailScreen() {
             contentDescription = "search screen"
         ),
         bottomNavItem(
+            route = Routes.Home::class.qualifiedName.toString(),
             icon = R.drawable.home,
             label = "Home",
             onClick = {
@@ -250,6 +255,7 @@ fun PreviewMovieDetailScreen() {
             contentDescription = "screen with best rated movies"
         ),
         bottomNavItem(
+            route = Routes.Library::class.qualifiedName.toString(),
             icon = R.drawable.library,
             label = "Library",
             onClick = {
@@ -258,7 +264,7 @@ fun PreviewMovieDetailScreen() {
         )
     )
     MovieDetailScreen(bottomNavItems = sampleBottomNavItems,
-        selectedItemIndex = 0,
+        currentDestination = rememberNavController().currentBackStackEntryAsState().value?.destination?.route,
         backgroundUrl = "https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg",
         posterUrl = "https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg",
         title = "Deadpool & Wolverine",

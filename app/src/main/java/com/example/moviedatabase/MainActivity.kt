@@ -35,5 +35,6 @@ class MainActivity : ComponentActivity() {
                 AppRouter()
             }
         }
+        AppContainer.init(this)
     }
 }

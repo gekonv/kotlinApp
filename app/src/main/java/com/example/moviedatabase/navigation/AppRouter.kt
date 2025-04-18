@@ -66,7 +66,9 @@ fun MainAppRouter(navController: NavHostController){
     }
     NavHost(navController = navController, startDestination = Routes.Home){
         composable<Routes.Home>(){
-            HomeScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route)
+            HomeScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route, onItemClick = {
+                navController.navigate(Routes.PlaygroundEditor(it))
+            })
         }
         composable<Routes.Library>(){
             LibraryScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route)

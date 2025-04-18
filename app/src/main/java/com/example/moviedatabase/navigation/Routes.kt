@@ -1,5 +1,6 @@
 package com.example.moviedatabase.navigation
 
+import com.example.moviedatabase.data.remote.Movie
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,5 +12,5 @@ sealed class Routes(val route: String){
     @Serializable
     data object Search: Routes("Search")
     @Serializable
-    data object MovieDetail: Routes("MovieDetail")
+    data class MovieDetail(val id: Int): Routes("MovieDetail")
 }

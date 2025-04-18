@@ -11,4 +11,12 @@ class MovieRepository(
     suspend fun fetchPopularMovies(): List<Movie>{
         return movieRemoteDataSource.fetchPopularMovies(API_KEY)
     }
+
+    suspend fun fetchNowPlayingMovies(): List<Movie>{
+        return movieRemoteDataSource.fetchNowPlayingMovies(API_KEY)
+    }
+
+    suspend fun fetchUpcoming(): List<Movie>{
+        return movieRemoteDataSource.fetchUpcoming(API_KEY)
+    }
 }

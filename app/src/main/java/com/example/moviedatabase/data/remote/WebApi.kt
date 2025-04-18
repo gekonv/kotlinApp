@@ -28,6 +28,12 @@ interface WebApi {
         @Query("page") page: Int = 1
     ): MovieResponse
 
+    @GET("movie/now_playing")
+    suspend fun getNowPlaying(@Query("api_key") apiKey: String): MovieResponse
+
+    @GET("movie/upcoming")
+    suspend fun getUpcoming(@Query("api_key") apiKey: String): MovieResponse
+
     companion object{
         @Volatile
         private var INSTANCE: WebApi? = null

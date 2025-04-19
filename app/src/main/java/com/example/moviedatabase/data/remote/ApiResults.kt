@@ -10,7 +10,19 @@ data class MovieResponse(
 
 @Serializable
 data class Movie(
+    val id: Int = 0,
+    val title: String = "",
+    @SerialName("poster_path") val posterPath: String = "",
+    @SerialName("backdrop_path") val backdropPath: String = "",
+    @SerialName("release_date") val releaseDate: String = "",
+    val runtime: Int = 0,
+    val voteAverage: Double = 0.0,
+    val genres: List<Genre> = emptyList(),
+    val overview: String = ""
+)
+
+@Serializable
+data class Genre(
     val id: Int,
-    val title: String,
-    @SerialName("poster_path") val posterPath: String
+    val name: String
 )

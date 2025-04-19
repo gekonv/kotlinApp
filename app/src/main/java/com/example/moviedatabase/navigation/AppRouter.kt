@@ -17,7 +17,7 @@ import com.example.moviedatabase.screens.SearchScreen
 import androidx.navigation.compose.composable
 import com.example.moviedatabase.R
 import androidx.compose.runtime.remember
-
+import com.example.moviedatabase.screens.MovieDetailScreen
 
 
 @Composable
@@ -51,7 +51,7 @@ fun MainAppRouter(navController: NavHostController){
                 onClick = {
                     navigateToBottomNavItem(navController, Routes.Home)
                 },
-                contentDescription = "screen with best rated movies"
+                contentDescription = "screen with best rated movies",
             ),
             bottomNavItem(
                 route = Routes.Library::class.qualifiedName.toString(),
@@ -66,15 +66,26 @@ fun MainAppRouter(navController: NavHostController){
     }
     NavHost(navController = navController, startDestination = Routes.Home){
         composable<Routes.Home>(){
-            HomeScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route, onItemClick = {
-                navController.navigate(Routes.PlaygroundEditor(it))
-            })
+            HomeScreen(
+                bottomNavItems,
+                currentBackStackEntry.value?.destination?.route,
+                onItemClick = {
+                    navController.navigate(Routes.MovieDetail(it))
+                }
+            )
         }
         composable<Routes.Library>(){
             LibraryScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route)
         }
         composable<Routes.Search>(){
             SearchScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route)
+        }
+        composable<Routes.MovieDetail> {
+            MovieDetailScreen(
+                bottomNavItems = bottomNavItems,
+                currentDestination = currentBackStackEntry.value?.destination?.route,
+                goBack = { navController.popBackStack() }
+            )
         }
     }
 }

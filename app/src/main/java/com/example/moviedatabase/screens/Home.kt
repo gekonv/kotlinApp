@@ -1,5 +1,6 @@
 package com.example.moviedatabase.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,8 +31,11 @@ import com.example.moviedatabase.navigation.BottomNavigation
 import com.example.moviedatabase.navigation.bottomNavItem
 
 @Composable
-fun HomeScreen(bottomNavItems: List<bottomNavItem>,
-               currentDestination: String?){
+fun HomeScreen(
+    bottomNavItems: List<bottomNavItem>,
+    currentDestination: String?,
+    onItemClick: (Int) -> Unit
+){
     Scaffold (
         topBar = {  },
         bottomBar = { BottomNavigation(
@@ -41,7 +45,8 @@ fun HomeScreen(bottomNavItems: List<bottomNavItem>,
         modifier = Modifier.fillMaxSize(),
     ){ innerPadding ->
         HomeContent(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            onClick = { onItemClick(it) }
         )
     }
 }
@@ -50,7 +55,8 @@ fun HomeScreen(bottomNavItems: List<bottomNavItem>,
 @Composable
 fun HomeContent(
     modifier: Modifier,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    onClick: (Int) -> Unit
 ){
     val popular = viewModel.popular
     val nowPlaying = viewModel.nowPlaying
@@ -61,33 +67,42 @@ fun HomeContent(
         .verticalScroll(rememberScrollState())
         .padding(16.dp)
     ) {
-        MovieRowSection("Popular", popular)
+        MovieRowSection("Popular", popular, onClick)
         Spacer(modifier = Modifier.height(24.dp))
-        MovieRowSection("Now Playing", nowPlaying)
+        MovieRowSection("Now Playing", nowPlaying, onClick)
         Spacer(modifier = Modifier.height(24.dp))
-        MovieRowSection("Coming Soon", upcoming)
+        MovieRowSection("Coming Soon", upcoming, onClick)
     }
 }
 
 @Composable
-fun MovieRowSection(section: String, movies: List<Movie>) {
+fun MovieRowSection(section: String, movies: List<Movie>, onClick: (Int) -> Unit) {
     Column {
         Text(text = section, style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow {
             items(movies) { movie ->
-                MovieCard(movie)
+                MovieCard(
+                    movie,
+                    onClick = onClick
+                )
             }
         }
     }
 }
 
 @Composable
-fun MovieCard(movie: Movie) {
+fun MovieCard(
+    movie: Movie,
+    onClick: (Int) -> Unit
+) {
     Column(
         modifier = Modifier
             .width(140.dp)
             .padding(end = 12.dp)
+            .clickable{
+                onClick(movie.id)
+            }
     ) {
         AsyncImage(
             model = "https://image.tmdb.org/t/p/w500${movie.posterPath}",

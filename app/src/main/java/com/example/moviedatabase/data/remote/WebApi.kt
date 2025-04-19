@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.themoviedb.org/3/"
@@ -33,6 +34,9 @@ interface WebApi {
 
     @GET("movie/upcoming")
     suspend fun getUpcoming(@Query("api_key") apiKey: String): MovieResponse
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetail(@Path("movie_id") id: Int, @Query("api_key") apiKey: String): Movie
 
     companion object{
         @Volatile

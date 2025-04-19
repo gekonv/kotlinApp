@@ -17,4 +17,8 @@ class MovieRemoteDataSource(
     suspend fun fetchUpcoming(apiKey: String): List<Movie>{
         return webApi.getUpcoming(apiKey).results
     }
+
+    suspend fun fetchMovieDetail(id: Int, apiKey: String): Movie{
+        return webApi.getMovieDetail(id, apiKey)
+    }
 }

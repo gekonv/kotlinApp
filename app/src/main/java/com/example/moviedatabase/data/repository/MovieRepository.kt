@@ -19,4 +19,8 @@ class MovieRepository(
     suspend fun fetchUpcoming(): List<Movie>{
         return movieRemoteDataSource.fetchUpcoming(API_KEY)
     }
+
+    suspend fun fetchMovieDetail(id: Int): Movie{
+        return movieRemoteDataSource.fetchMovieDetail(id, API_KEY)
+    }
 }

@@ -9,12 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Home
+import com.example.moviedatabase.R
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,43 +23,39 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.moviedatabase.R
+import com.example.moviedatabase.data.remote.Movie
+import com.example.moviedatabase.data.viewModel.MovieDetailViewModel
 import com.example.moviedatabase.navigation.BottomNavigation
-import com.example.moviedatabase.navigation.Routes
 import com.example.moviedatabase.navigation.bottomNavItem
+
 
 @Composable
 fun MovieDetailScreen(
+    goBack: () -> Unit,
     bottomNavItems: List<bottomNavItem>,
     currentDestination: String?,
-    backgroundUrl: String,
-    posterUrl: String,
-    title: String,
-    genres: List<String>,
-    releaseDate: String,
-    duration: String,
-    rating: String,
-    goBack: () -> Unit,
-    addToList: () -> Unit,
-    synopsis: String
+    viewModel: MovieDetailViewModel = viewModel(),
 ){
+    val movie by viewModel.movie.collectAsState()
+
     Scaffold (
         topBar = { DetailTopBar(
             goBack = goBack,
-            addToList = addToList
+            addToList = { }
         ) },
         bottomBar = { BottomNavigation(
             navigationItems = bottomNavItems,
@@ -68,14 +65,7 @@ fun MovieDetailScreen(
     ){ innerPadding ->
         MovieDetailContent(
             modifier = Modifier.padding(innerPadding),
-            backgroundUrl = backgroundUrl,
-            posterUrl = posterUrl,
-            title = title,
-            genres = genres,
-            releaseDate = releaseDate,
-            duration = duration,
-            rating = rating,
-            synopsis = synopsis
+            movie = movie
         )
     }
 }
@@ -108,26 +98,9 @@ fun MovieDetailsRow(label: String, value: String) {
 @Composable
 fun MovieDetailContent(
     modifier: Modifier,
-    backgroundUrl: String,
-    posterUrl: String,
-    title: String,
-    genres: List<String>,
-    releaseDate: String,
-    duration: String,
-    rating: String,
-    synopsis: String
+    movie: Movie
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-
-        // Background Image
-        AsyncImage(
-            model = backgroundUrl,
-            contentDescription = "Background Image",
-            contentScale = ContentScale.Crop,
-            modifier = modifier.fillMaxSize()
-        )
-
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -143,7 +116,7 @@ fun MovieDetailContent(
             item {
                 //poster
                 AsyncImage(
-                    model = posterUrl,
+                    model = "https://image.tmdb.org/t/p/w500${movie.posterPath}",
                     contentDescription = "Movie Poster",
                     modifier = Modifier
                         .height(200.dp)
@@ -154,7 +127,7 @@ fun MovieDetailContent(
                 Spacer(modifier = Modifier.height(16.dp))
                 //title
                 Text(
-                    text = title,
+                    text = movie.title,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -165,6 +138,7 @@ fun MovieDetailContent(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    val genres = movie.genres.map { it.name }
                     genres.take(4).forEach { genre ->
                         Genre(text = genre)
                     }
@@ -173,9 +147,9 @@ fun MovieDetailContent(
             }
             //details
             item {
-                MovieDetailsRow("Release Date", releaseDate)
-                MovieDetailsRow("Duration", duration)
-                MovieDetailsRow("Rating", " $rating⭐")
+                MovieDetailsRow("Release Date", movie.releaseDate)
+                MovieDetailsRow("Duration", movie.runtime.toString() + " mins")
+                MovieDetailsRow("Rating", movie.voteAverage.toString() + "⭐")
                 Spacer(modifier = Modifier.height(20.dp))
             }
             //synopsis
@@ -190,7 +164,7 @@ fun MovieDetailContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = synopsis,
+                    text = movie.overview,
                     fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify
@@ -215,8 +189,9 @@ fun DetailTopBar(goBack: () -> Unit,
                 onClick = goBack
             ) {
                 Icon(
-                    Icons.Outlined.Home,
+                    painter = painterResource(R.drawable.arrow_back_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
                     contentDescription = "Navigation back",
+                    modifier = Modifier.size(20.dp),
                 )
             }
         },
@@ -233,49 +208,4 @@ fun DetailTopBar(goBack: () -> Unit,
     )
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewMovieDetailScreen() {
-    val sampleBottomNavItems = listOf(
-        bottomNavItem(
-            route = Routes.Search::class.qualifiedName.toString(),
-            icon = R.drawable.search,
-            label = "Search",
-            onClick = {
-            },
-            contentDescription = "search screen"
-        ),
-        bottomNavItem(
-            route = Routes.Home::class.qualifiedName.toString(),
-            icon = R.drawable.home,
-            label = "Home",
-            onClick = {
-            },
-            contentDescription = "screen with best rated movies"
-        ),
-        bottomNavItem(
-            route = Routes.Library::class.qualifiedName.toString(),
-            icon = R.drawable.library,
-            label = "Library",
-            onClick = {
-            },
-            contentDescription = "screen with my library"
-        )
-    )
-    MovieDetailScreen(bottomNavItems = sampleBottomNavItems,
-        currentDestination = rememberNavController().currentBackStackEntryAsState().value?.destination?.route,
-        backgroundUrl = "https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg",
-        posterUrl = "https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg",
-        title = "Deadpool & Wolverine",
-        genres = listOf("action", "drama"),
-        releaseDate = "24.07.2000",
-        duration = "128 min",
-        rating = "8/10",
-        goBack = {},
-        addToList = {},
-        synopsis = "'Avengers Assemble' ('The Avengers') is a truly enjoyable superhero film that lives up to its hype and creates a story that allows for four of the greatest superheroes to connect in this mega-blockbuster extravaganza. Joss Whedon has created one of the most action-packed Marvel films to have graced the screen, full of humour, thrills and a great cast of characters, all of which impel this visual effects-driven spectacle. Whilst I had the great opportunity to watch this epic in the cinema in 3D, the film is equally as stunning on an average television set, with the final battle between the Avengers and Loki's army being one of the most spectacular scenes in a superhero movie. An impressive and remarkable fantastical superhero flick from Whedon." +
-                "'Avengers Assemble' ('The Avengers') is a truly enjoyable superhero film that lives up to its hype and creates a story that allows for four of the greatest superheroes to connect in this mega-blockbuster extravaganza. Joss Whedon has created one of the most action-packed Marvel films to have graced the screen, full of humour, thrills and a great cast of characters, all of which impel this visual effects-driven spectacle. Whilst I had the great opportunity to watch this epic in the cinema in 3D, the film is equally as stunning on an average television set, with the final battle between the Avengers and Loki's army being one of the most spectacular scenes in a superhero movie. An impressive and remarkable fantastical superhero flick from Whedon."
-        )
-}
 

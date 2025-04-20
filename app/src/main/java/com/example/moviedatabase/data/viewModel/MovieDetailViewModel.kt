@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.moviedatabase.data.datasource.MovieRemoteDataSource
-import com.example.moviedatabase.data.remote.Movie
+import com.example.moviedatabase.data.local.Movie
+import com.example.moviedatabase.data.remote.ApiCallResult
 import com.example.moviedatabase.data.remote.WebApi
 import com.example.moviedatabase.data.repository.MovieRepository
 import com.example.moviedatabase.navigation.Routes
@@ -25,7 +26,10 @@ class MovieDetailViewModel(private val savedStateHandle: SavedStateHandle): View
 
     init {
         viewModelScope.launch {
-            _movie.value = movieRepository.fetchMovieDetail(id)
+            val result = movieRepository.fetchMovieDetail(id)
+            if(result is ApiCallResult.Success){
+                _movie.value = result.data
+            }
         }
     }
 

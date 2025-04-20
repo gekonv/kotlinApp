@@ -23,9 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.moviedatabase.data.remote.Movie
+import com.example.moviedatabase.data.local.Movie
 import com.example.moviedatabase.data.viewModel.HomeViewModel
 import com.example.moviedatabase.navigation.BottomNavigation
 import com.example.moviedatabase.navigation.bottomNavItem
@@ -58,9 +59,9 @@ fun HomeContent(
     viewModel: HomeViewModel = viewModel(),
     onClick: (Int) -> Unit
 ){
-    val popular = viewModel.popular
-    val nowPlaying = viewModel.nowPlaying
-    val upcoming = viewModel.upcoming
+    val popular by viewModel.popularList.collectAsStateWithLifecycle()
+    val nowPlaying by viewModel.nowPlayingList.collectAsStateWithLifecycle()
+    val upcoming by viewModel.upcomingList.collectAsStateWithLifecycle()
 
     Column(modifier = modifier
         .fillMaxSize()

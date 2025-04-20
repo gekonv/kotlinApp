@@ -14,7 +14,6 @@ class WatchlistRepository(private val watchlistDbDatasource: WatchistDbDatasourc
 
     suspend fun deleteWatchlist(watchlist: Watchlist) = watchlistDbDatasource.deleteWatchlist(watchlist)
 
-    suspend fun addMovie(watchlistId: Long) = watchlistDbDatasource.insertMovie(Movie(watchlistId = watchlistId))
 
     suspend fun deleteMovie(movie: Movie) = watchlistDbDatasource.deleteMovie(movie)
 }

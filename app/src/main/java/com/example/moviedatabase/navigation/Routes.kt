@@ -1,6 +1,5 @@
 package com.example.moviedatabase.navigation
 
-import com.example.moviedatabase.data.remote.Movie
 import kotlinx.serialization.Serializable
 
 @Serializable

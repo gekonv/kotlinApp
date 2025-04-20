@@ -42,15 +42,21 @@ class WatchistDbDatasource(
 
 fun Movie.toMovieEntity(): MovieEntity{
     return MovieEntity(
-        movieId = movieId,
-        watchlistId = watchlistId
+        movieId = TODO(),
+        watchlistId = TODO()
     )
 }
 
 fun MovieEntity.toMovie(): Movie{
     return Movie(
-        movieId = movieId,
-        watchlistId = watchlistId
+        id = TODO(),
+        title = TODO(),
+        posterPath = TODO(),
+        releaseDate = TODO(),
+        runtime = TODO(),
+        voteAverage = TODO(),
+        genres = TODO(),
+        overview = TODO()
     )
 }
 

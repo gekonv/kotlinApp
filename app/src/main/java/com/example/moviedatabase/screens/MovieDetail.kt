@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.moviedatabase.data.remote.Movie
+import com.example.moviedatabase.data.local.Movie
 import com.example.moviedatabase.data.viewModel.MovieDetailViewModel
 import com.example.moviedatabase.navigation.BottomNavigation
 import com.example.moviedatabase.navigation.bottomNavItem

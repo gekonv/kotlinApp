@@ -14,7 +14,7 @@ private const val BASE_URL = "https://api.themoviedb.org/3/"
 val json = Json {
     ignoreUnknownKeys = true
 //    isLenient = true
-//    coerceInputValues = true
+    coerceInputValues = true
 }
 
 private val retrofit = Retrofit.Builder()
@@ -27,16 +27,29 @@ interface WebApi {
     suspend fun getPopularMovies(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int = 1
-    ): MovieResponse
+    ): Response<MovieResponse>
 
     @GET("movie/now_playing")
-    suspend fun getNowPlaying(@Query("api_key") apiKey: String): MovieResponse
+    suspend fun getNowPlaying(
+        @Query("api_key") apiKey: String
+    ): Response<MovieResponse>
 
     @GET("movie/upcoming")
-    suspend fun getUpcoming(@Query("api_key") apiKey: String): MovieResponse
+    suspend fun getUpcoming(
+        @Query("api_key") apiKey: String
+    ): Response<MovieResponse>
 
     @GET("movie/{movie_id}")
-    suspend fun getMovieDetail(@Path("movie_id") id: Int, @Query("api_key") apiKey: String): Movie
+    suspend fun getMovieDetail(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String
+    ): Response<MovieApi>
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String
+    ): Response<MovieResponse>
 
     companion object{
         @Volatile

@@ -8,7 +8,6 @@ import com.example.moviedatabase.data.local.Watchlist
 import com.example.moviedatabase.data.repository.WatchlistRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 

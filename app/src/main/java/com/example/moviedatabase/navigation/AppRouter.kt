@@ -78,7 +78,13 @@ fun MainAppRouter(navController: NavHostController){
             LibraryScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route)
         }
         composable<Routes.Search>(){
-            SearchScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route)
+            SearchScreen(
+                bottomNavItems,
+                currentBackStackEntry.value?.destination?.route,
+                onItemClick = {
+                    navController.navigate(Routes.MovieDetail(it))
+                }
+            )
         }
         composable<Routes.MovieDetail> {
             MovieDetailScreen(

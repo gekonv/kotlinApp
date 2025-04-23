@@ -17,6 +17,7 @@ data class MovieApi(
     @SerialName("release_date")
     val releaseDate: String = "",
     val runtime: Int = 0,
+    @SerialName("vote_average")
     val voteAverage: Double = 0.0,
     val genres: List<GenreApi> = emptyList(),
     val overview: String

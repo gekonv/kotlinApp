@@ -9,15 +9,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.moviedatabase.R
 import com.example.moviedatabase.screens.HomeScreen
 import com.example.moviedatabase.screens.LibraryScreen
-import com.example.moviedatabase.screens.SearchScreen
-import androidx.navigation.compose.composable
-import com.example.moviedatabase.R
-import androidx.compose.runtime.remember
 import com.example.moviedatabase.screens.MovieDetailScreen
+import com.example.moviedatabase.screens.SearchScreen
+import com.example.moviedatabase.screens.WatchlistContentScreen
 
 
 @Composable
@@ -75,7 +75,13 @@ fun MainAppRouter(navController: NavHostController){
             )
         }
         composable<Routes.Library>(){
-            LibraryScreen(bottomNavItems, currentBackStackEntry.value?.destination?.route)
+            LibraryScreen(
+                bottomNavItems,
+                currentBackStackEntry.value?.destination?.route,
+                onItemClick = {
+                    navController.navigate(Routes.WatchlistContent(it))
+                }
+            )
         }
         composable<Routes.Search>(){
             SearchScreen(
@@ -88,6 +94,11 @@ fun MainAppRouter(navController: NavHostController){
         }
         composable<Routes.MovieDetail> {
             MovieDetailScreen(
+                goBack = { navController.popBackStack() }
+            )
+        }
+        composable<Routes.WatchlistContent> {
+            WatchlistContentScreen(
                 bottomNavItems = bottomNavItems,
                 currentDestination = currentBackStackEntry.value?.destination?.route,
                 goBack = { navController.popBackStack() }

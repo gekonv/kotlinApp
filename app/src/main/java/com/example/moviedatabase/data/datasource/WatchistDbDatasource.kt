@@ -1,5 +1,6 @@
 package com.example.moviedatabase.data.datasource
 
+import com.example.moviedatabase.data.db.GenreConverter
 import com.example.moviedatabase.data.db.MovieEntity
 import com.example.moviedatabase.data.db.WatchlistDao
 import com.example.moviedatabase.data.db.WatchlistEntity
@@ -30,33 +31,54 @@ class WatchistDbDatasource(
         watchlistDao.deleteWatchlist(watchlist.toWatchlistEntity())
     }
 
-    suspend fun insertMovie(movie: Movie){
-        watchlistDao.insertMovie(movie.toMovieEntity())
+    suspend fun getWatchlistName(id: Long): String{
+        return watchlistDao.getName(id)
     }
 
-    suspend fun deleteMovie(movie: Movie){
-        watchlistDao.deleteMovie(movie.toMovieEntity())
+    fun getAllMovies(id: Long): Flow<List<Movie>>{
+        return watchlistDao.getAllMovies(id).map { movieEntities ->
+            movieEntities.map { e ->
+                e.toMovie()
+            }
+        }
+    }
+
+    suspend fun insertMovie(movie: Movie, listId: Long){
+        watchlistDao.insertMovie(movie.toMovieEntity(listId))
+    }
+
+    suspend fun deleteMovie(movie: Movie, listId: Long){
+        watchlistDao.deleteMovie(movie.toMovieEntity(listId))
     }
 
 }
 
-fun Movie.toMovieEntity(): MovieEntity{
+fun Movie.toMovieEntity(listId: Long): MovieEntity{
+    val genresJson = GenreConverter().fromGenreList(this.genres)
     return MovieEntity(
-        movieId = TODO(),
-        watchlistId = TODO()
+        listId = listId,
+        id = id,
+        title = title,
+        posterPath = posterPath,
+        releaseDate = releaseDate,
+        runtime = runtime,
+        voteAverage = voteAverage,
+        genres = genresJson,
+        overview = overview
     )
 }
 
 fun MovieEntity.toMovie(): Movie{
+    val genreList = GenreConverter().toGenreList(this.genres)
     return Movie(
-        id = TODO(),
-        title = TODO(),
-        posterPath = TODO(),
-        releaseDate = TODO(),
-        runtime = TODO(),
-        voteAverage = TODO(),
-        genres = TODO(),
-        overview = TODO()
+        id = id,
+        title = title,
+        posterPath = posterPath,
+        releaseDate = releaseDate,
+        runtime = runtime,
+        voteAverage = voteAverage,
+        genres = genreList,
+        overview = overview
     )
 }
 

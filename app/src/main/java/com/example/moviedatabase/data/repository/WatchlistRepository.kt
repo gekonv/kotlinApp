@@ -14,6 +14,13 @@ class WatchlistRepository(private val watchlistDbDatasource: WatchistDbDatasourc
 
     suspend fun deleteWatchlist(watchlist: Watchlist) = watchlistDbDatasource.deleteWatchlist(watchlist)
 
+    suspend fun getWatchlistName(id: Long) = watchlistDbDatasource.getWatchlistName(id)
 
-    suspend fun deleteMovie(movie: Movie) = watchlistDbDatasource.deleteMovie(movie)
+    fun getAllMovies(watchlistId: Long): Flow<List<Movie>> {
+        return watchlistDbDatasource.getAllMovies(watchlistId)
+    }
+
+    suspend fun insertMovie(movie: Movie, listId: Long) = watchlistDbDatasource.insertMovie(movie, listId = listId)
+
+    suspend fun deleteMovie(movie: Movie, listId: Long) = watchlistDbDatasource.deleteMovie(movie, listId = listId)
 }

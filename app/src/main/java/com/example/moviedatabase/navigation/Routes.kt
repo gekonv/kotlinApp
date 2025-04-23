@@ -12,4 +12,6 @@ sealed class Routes(val route: String){
     data object Search: Routes("Search")
     @Serializable
     data class MovieDetail(val id: Int): Routes("MovieDetail")
+    @Serializable
+    data class WatchlistContent(val watchlistId: Long): Routes("WatchlistContent")
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class WatchlistViewModel() : ViewModel(){
+class LibraryViewModel() : ViewModel(){
     private val repository = WatchlistRepository(
         watchlistDbDatasource = WatchistDbDatasource(
             watchlistDao = AppContainer.watchlistDatabase.watchlistDao()
@@ -23,12 +23,6 @@ class WatchlistViewModel() : ViewModel(){
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()
     )
-
-    fun showLists(){ //TODO tohle nejak divny ma tady asi bej insert ale nevim proc
-        viewModelScope.launch {
-            repository.getAllWatchlists
-        }
-    }
 
     fun deleteWatchlist(watchlist: Watchlist){
         viewModelScope.launch {

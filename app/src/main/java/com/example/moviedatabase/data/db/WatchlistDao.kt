@@ -24,6 +24,12 @@ interface WatchlistDao {
     @Delete
     suspend fun deleteWatchlist(watchlist: WatchlistEntity)
 
+    @Query("SELECT name FROM watchlist WHERE listId = :id")
+    suspend fun getName(id: Long): String
+
+    @Query("SELECT * FROM movies WHERE listId = :id")
+    fun getAllMovies(id: Long): Flow<List<MovieEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: MovieEntity)
 

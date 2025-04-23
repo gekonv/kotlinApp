@@ -25,11 +25,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,20 +48,15 @@ import com.example.moviedatabase.navigation.bottomNavItem
 @Composable
 fun MovieDetailScreen(
     goBack: () -> Unit,
-    bottomNavItems: List<bottomNavItem>,
-    currentDestination: String?,
     viewModel: MovieDetailViewModel = viewModel(),
 ){
     val movie by viewModel.movie.collectAsState()
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold (
-        topBar = { DetailTopBar(
+        topBar = { MovieDetailTopBar(
             goBack = goBack,
             addToList = { }
-        ) },
-        bottomBar = { BottomNavigation(
-            navigationItems = bottomNavItems,
-            currentRoute = currentDestination
         ) },
         modifier = Modifier.fillMaxSize(),
     ){ innerPadding ->
@@ -67,6 +64,9 @@ fun MovieDetailScreen(
             modifier = Modifier.padding(innerPadding),
             movie = movie
         )
+        /*CreateAddDialog(
+            showDialog = showDialog,
+        )*/
     }
 }
 
@@ -176,7 +176,7 @@ fun MovieDetailContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailTopBar(goBack: () -> Unit,
+fun MovieDetailTopBar(goBack: () -> Unit,
                  addToList: () -> Unit
 ){
     TopAppBar(

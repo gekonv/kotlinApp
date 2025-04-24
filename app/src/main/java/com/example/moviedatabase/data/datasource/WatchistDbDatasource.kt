@@ -20,9 +20,6 @@ class WatchistDbDatasource(
         }
     }
 
-    suspend fun updateWatchlist(watchlist: Watchlist) {
-        watchlistDao.updateWatchlist(watchlist.toWatchlistEntity())
-    }
     suspend fun insertWatchlist(watchlist: Watchlist){
         watchlistDao.insertWatchlist(watchlist.toWatchlistEntity())
     }
@@ -44,11 +41,14 @@ class WatchistDbDatasource(
     }
 
     suspend fun insertMovie(movie: Movie, listId: Long){
-        watchlistDao.insertMovie(movie.toMovieEntity(listId))
+        val count = watchlistDao.movieExists(movie.id, listId)
+        if (count == 0) {
+            watchlistDao.insertMovie(movie.toMovieEntity(listId))
+        }
     }
 
     suspend fun deleteMovie(movie: Movie, listId: Long){
-        watchlistDao.deleteMovie(movie.toMovieEntity(listId))
+        watchlistDao.deleteMovie(movieId = movie.id, listId = listId)
     }
 
 }

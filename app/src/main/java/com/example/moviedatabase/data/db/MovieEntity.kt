@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import com.example.moviedatabase.data.db.WatchlistEntity
 import com.example.moviedatabase.data.local.Genre
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

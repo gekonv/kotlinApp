@@ -5,18 +5,12 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
-import com.example.moviedatabase.data.db.MovieEntity
-import com.example.moviedatabase.data.db.WatchlistEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WatchlistDao {
     @Query("SELECT * FROM watchlist ORDER BY listId ASC")
     fun getAllWatchlists(): Flow<List<WatchlistEntity>>
-
-    @Update
-    suspend fun updateWatchlist(watchlistEntity: WatchlistEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWatchlist(watchlistEntity: WatchlistEntity): Long
@@ -33,6 +27,9 @@ interface WatchlistDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: MovieEntity)
 
-    @Delete
-    suspend fun deleteMovie(movie: MovieEntity)
+    @Query("DELETE FROM movies WHERE id = :movieId AND listId = :listId")
+    suspend fun deleteMovie(movieId: Int, listId: Long)
+
+    @Query("SELECT COUNT(*) FROM movies WHERE id = :movieId AND listId = :listId")
+    suspend fun movieExists(movieId: Int, listId: Long): Int
 }

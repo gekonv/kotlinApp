@@ -25,6 +25,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,12 +38,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.moviedatabase.data.local.Movie
+import com.example.moviedatabase.data.local.Watchlist
 import com.example.moviedatabase.data.viewModel.MovieDetailViewModel
-import com.example.moviedatabase.navigation.BottomNavigation
-import com.example.moviedatabase.navigation.bottomNavItem
+
 
 
 @Composable
@@ -52,11 +54,13 @@ fun MovieDetailScreen(
 ){
     val movie by viewModel.movie.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
+    val watchlists by viewModel.watchlist.collectAsStateWithLifecycle()
+    val selectedWatchlists = remember { mutableStateMapOf<Long, Boolean>() }
 
     Scaffold (
         topBar = { MovieDetailTopBar(
             goBack = goBack,
-            addToList = { }
+            addToList = { showDialog = true }
         ) },
         modifier = Modifier.fillMaxSize(),
     ){ innerPadding ->
@@ -64,9 +68,18 @@ fun MovieDetailScreen(
             modifier = Modifier.padding(innerPadding),
             movie = movie
         )
-        /*CreateAddDialog(
-            showDialog = showDialog,
-        )*/
+        if (showDialog) {
+            AddToWatchlistDialog(
+                watchlists = watchlists,
+                selectedWatchlists = selectedWatchlists,
+                onDismiss = { showDialog = false },
+                onAdd = {
+                    val selectedIds = selectedWatchlists.filterValues { it }.keys
+                    viewModel.addMovieToWatchlists(movie, selectedIds)
+                    showDialog = false
+                }
+            )
+        }
     }
 }
 
@@ -114,7 +127,6 @@ fun MovieDetailContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                //poster
                 AsyncImage(
                     model = "https://image.tmdb.org/t/p/w500${movie.posterPath}",
                     contentDescription = "Movie Poster",
@@ -125,7 +137,6 @@ fun MovieDetailContent(
                         .background(Color.White)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                //title
                 Text(
                     text = movie.title,
                     fontSize = 24.sp,
@@ -134,7 +145,6 @@ fun MovieDetailContent(
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                //genre
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -145,14 +155,12 @@ fun MovieDetailContent(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            //details
             item {
                 MovieDetailsRow("Release Date", movie.releaseDate)
                 MovieDetailsRow("Duration", movie.runtime.toString() + " mins")
-                MovieDetailsRow("Rating", movie.voteAverage.toString() + "⭐")
+                MovieDetailsRow("Rating", movie.voteAverage.toString() + " / 10")
                 Spacer(modifier = Modifier.height(20.dp))
             }
-            //synopsis
             item {
                 Text(
                     text = "Synopsis",
@@ -208,4 +216,47 @@ fun MovieDetailTopBar(goBack: () -> Unit,
     )
 }
 
-
+@Composable
+fun AddToWatchlistDialog(
+    watchlists: List<Watchlist>,
+    selectedWatchlists: MutableMap<Long, Boolean>,
+    onDismiss: () -> Unit,
+    onAdd: () -> Unit
+) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add to Watchlists") },
+        text = {
+            LazyColumn {
+                items(watchlists.size) { index ->
+                    val watchlist = watchlists[index]
+                    val isSelected = selectedWatchlists[watchlist.listId] ?: false
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    ) {
+                        androidx.compose.material3.Checkbox(
+                            checked = isSelected,
+                            onCheckedChange = { selected ->
+                                selectedWatchlists[watchlist.listId] = selected
+                            }
+                        )
+                        Text(watchlist.name)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = onAdd) {
+                Text("Add")
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}

@@ -10,8 +10,6 @@ class WatchlistRepository(private val watchlistDbDatasource: WatchistDbDatasourc
 
     suspend fun insertWatchlist(name: String) = watchlistDbDatasource.insertWatchlist(Watchlist(name = name))
 
-    suspend fun renameWatchlist(watchlist: Watchlist) = watchlistDbDatasource.updateWatchlist(watchlist)
-
     suspend fun deleteWatchlist(watchlist: Watchlist) = watchlistDbDatasource.deleteWatchlist(watchlist)
 
     suspend fun getWatchlistName(id: Long) = watchlistDbDatasource.getWatchlistName(id)

@@ -101,7 +101,12 @@ fun MainAppRouter(navController: NavHostController){
             WatchlistContentScreen(
                 bottomNavItems = bottomNavItems,
                 currentDestination = currentBackStackEntry.value?.destination?.route,
-                goBack = { navController.popBackStack() }
+                goBack = {
+                    navController.popBackStack()
+                },
+                onItemClick = {
+                    navController.navigate(Routes.MovieDetail(it))
+                }
             )
         }
     }

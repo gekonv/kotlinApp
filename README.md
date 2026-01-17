@@ -15,7 +15,7 @@ A native Android application written in Kotlin that serves as a movie database a
 
 * **Language:** [Kotlin](https://kotlinlang.org/)
 * **Architecture:** MVVM (Model-View-ViewModel)
-* **Networking:** Retrofit2, OkHttp, Gson/Moshi
+* **Networking:** Retrofit
 * **Asynchronous Programming:** Kotlin Coroutines & Flow
 * **Image Loading:** [Coil](https://github.com/coil-kt/coil)
 * **Local Database:** Room Database
